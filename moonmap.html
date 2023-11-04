@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="leaflet.css" />
+    <link rel="stylesheet" href="styles.css"/>
+    <script src="leaflet.js"></script>
+</head>
+<body>
+    <div id="map"></div>
+    <script>
+        var map = L.map('map').setView([0, 0], 3);
+
+        var baselayer = new L.tileLayer('https://s3.amazonaws.com/opmbuilder/301_moon/tiles/w/hillshaded-albedo/{z}/{x}/{y}.png', {
+        tms: true,
+        }).addTo(map).setZIndex(0);
+  
+
+    </script>
+</body>
+</html>
