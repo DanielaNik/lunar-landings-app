@@ -10,6 +10,9 @@
     <script>
         var map = L.map('map').setView([0, 0], 3);
 
+        map.setMaxZoom(10)
+        map.setMinZoom(2);
+
         var baselayer = new L.tileLayer('https://s3.amazonaws.com/opmbuilder/301_moon/tiles/w/hillshaded-albedo/{z}/{x}/{y}.png', {
         tms: true,
         }).addTo(map).setZIndex(0);

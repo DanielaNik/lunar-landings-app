@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Leaflet TIFF Example</title>
+  <link rel="stylesheet" href="path/to/leaflet.css">
+  <link rel="stylesheet" href="path/to/leaflet-tiff.css">
+</head>
+<body>
+  <div id="map" style="width: 800px; height: 600px;"></div>
+
+  <script src="path/to/leaflet.js"></script>
+  <script src="path/to/leaflet-tiff.js"></script>
+
+  <script>
+    var map = L.map('map').setView([0, 0], 1); // Set the initial view
+
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map); // Add a tile layer as a background
+
+    // Add the TIFF image using L.Tiff
+    var tiff = new L.Tiff('path/to/your.tiff', {
+      addTo: map, // Add the image to the map
+    });
+
+    tiff.addTo(map);
+  </script>
+</body>
+</html>
