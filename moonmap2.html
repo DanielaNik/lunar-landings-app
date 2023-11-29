@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Moon Map</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #map {
+            height: 100vh;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="map"></div>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script>
+        var map = L.map('map', {
+        crs: L.CRS.Simple,
+        center: [0, 0],
+        zoom: 0,
+        preferCanvas: true,
+        });
+
+        var imageUrl = 'Moon_nearside_LRO_5000.jpg'; // Replace with the URL of your orthographic image
+        var imageSize = {
+            width: 5000,
+            height: 5000
+        };
+
+        var imageBounds = [
+        [-imageSize.height / 2, -imageSize.width / 2],
+        [imageSize.height / 2, imageSize.width / 2]
+        ];
+
+        L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+        map.setMaxBounds(imageBounds);
+
+
+        map.setMaxZoom(10)
+        map.setMinZoom(-2);
+
+        function latLonToPixel(lat, lon) {
+    // Scaling factor to map latitude [-90, 90] to pixel coordinates [-2500, 2500]
+    var scaleFactor = imageSize.height / 180;
+
+    // Translation factors to center the image at [0, 0]
+    var translateX = imageSize.width / 4;
+    var translateY = imageSize.height / 4;
+
+    // Convert latitude and longitude to pixel coordinates
+    var pixelX = lon * scaleFactor + translateX;
+    var pixelY = -lat * scaleFactor + translateY;
+
+    // Adjust the coordinates to fit within the specified range
+    pixelX = Math.max(Math.min(pixelX, 2500), -2500);
+    pixelY = Math.max(Math.min(pixelY, 2500), -2500);
+
+    return [pixelY, pixelX];
+}
+
+
+
+
+
+
+var lat = -2.4745;
+var lon = -43.3398;
+var pixelCoordinates = latLonToPixel(lat, lon);
+
+console.log('Final pixelCoordinates:', pixelCoordinates);
+
+var marker = L.marker(pixelCoordinates).addTo(map);
+marker.bindPopup('Object at ' + lat + ', ' + lon);
+
+
+///map.setView(pixelCoordinates, 8);  // Set an appropriate zoom level
+
+
+
+    </script>
+</body>
+
+</html>

@@ -5,9 +5,11 @@
     <link rel="stylesheet" href="styles.css"/>
     <script src="leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 </head>
 <body>
-    <div id="map"></div>
+    <div id="map" style="height: 100%; width: 100%;"></div>
     <script>
         var map = L.map('map', {
         center: [0, 0],  
@@ -21,11 +23,25 @@
         map.setMaxZoom(10)
         map.setMinZoom(2);
 
-
+        
         var baselayer = new L.tileLayer('https://s3.amazonaws.com/opmbuilder/301_moon/tiles/w/hillshaded-albedo/{z}/{x}/{y}.png', {
         tms: true,
         }).addTo(map).setZIndex(0);
+        
 
+        // var imageUrl = ''; // Replace with the path to your PNG image
+        // var imageBounds = [[-90, -180], [90, 180]]; // Adjust the bounds accordingly
+        // L.imageOverlay(imageUrl, imageBounds).addTo(map);
+
+        //Anthropogenic objects dataset
+        $.getJSON('output.geojson', function(data) {
+      var geojsonLayer = L.geoJSON(data, {
+        onEachFeature: function (feature, layer) {
+          // You can customize the popup content here
+          layer.bindPopup('<p>' + feature.properties.SHORT_NAME + '</p>');
+        }
+      }).addTo(map);
+    });
 
         fetch('results_featured_sites.csv')
             .then(response => response.text())
@@ -47,13 +63,16 @@
         });
 
         function addMarkers(data) {
-            for (var i = 0; i < data.length; i++) {
-            var marker = L.marker([data[i].Latitude, data[i].Longitude])
-            .bindPopup('<b>' + data[i].Name + '</b><br>' + data[i].Country + '<br>' + data[i].Description)
-            .addTo(map);
-            }
+        for (var i = 0; i < data.length; i++) {
+            if (data[i].Latitude !== undefined && data[i].Longitude !== undefined) {
+                var marker = L.marker([data[i].Latitude, data[i].Longitude])
+                .bindPopup('<b>' + data[i].Name + '</b><br>' + data[i].Country + '<br>' + data[i].Description)
+                .addTo(map);
+        } else {
+            console.error('Invalid LatLng object at index ' + i + ': Latitude or Longitude is undefined.');
         }
-  
+    }
+}
 
     </script>
 </body>
