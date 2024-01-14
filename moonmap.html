@@ -3,47 +3,68 @@
 <head>
     <link rel="stylesheet" href="leaflet.css" />
     <link rel="stylesheet" href="styles.css"/>
+    <link rel="stylesheet" href="leaflet-search-master\dist\leaflet-search.src.css">
     <script src="leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
+    <script src="leaflet-search-master\dist\leaflet-search.src.js"></script>
 </head>
 <body>
     <div id="map" style="height: 100%; width: 100%;"></div>
     <script>
         var map = L.map('map', {
-        center: [0, 0],  
-        zoom: 2,         
-        maxBounds: [     
-        [-90, -180],   
-        [90, 180]      
-        ],
+        center: [0, 0],
+        maxBounds: [
+            [-90,180],
+            [90,-180]
+        ],  
+        zoom: 2         
         });
 
-        map.setMaxZoom(10)
+        map.setMaxZoom(12)
         map.setMinZoom(2);
-
         
         var baselayer = new L.tileLayer('https://s3.amazonaws.com/opmbuilder/301_moon/tiles/w/hillshaded-albedo/{z}/{x}/{y}.png', {
         tms: true,
         }).addTo(map).setZIndex(0);
-        
-
-        // var imageUrl = ''; // Replace with the path to your PNG image
-        // var imageBounds = [[-90, -180], [90, 180]]; // Adjust the bounds accordingly
-        // L.imageOverlay(imageUrl, imageBounds).addTo(map);
-
+    
         //Anthropogenic objects dataset
+        var geojsonLayer;
         $.getJSON('output.geojson', function(data) {
-      var geojsonLayer = L.geoJSON(data, {
+            geojsonLayer = L.geoJSON(data, {
+            pointToLayer: function (feature, latlng) {
+            return L.marker(latlng, {
+                icon: customIcon,
+            });
+        },
         onEachFeature: function (feature, layer) {
-          // You can customize the popup content here
-          layer.bindPopup('<p>' + feature.properties.SHORT_NAME + '</p>');
+            layer.bindPopup(
+        '<div class="popup-content">' +
+            '<p>' + feature.properties.SHORT_NAME + '</p>' +
+            '<p>' + feature.properties.OBJECT + '</p>' +
+            '<p>Mission: <b>' + feature.properties.MISSION + '</b></p>' +
+            '<p>Coordinates: [' + feature.properties.LATITUDE + ', ' + feature.properties.LONGITUDE + ']</p>' +
+        '</div>',
+    );
         }
-      }).addTo(map);
-    });
+        }).addTo(map);
 
-        fetch('results_featured_sites.csv')
+        var searchControl = new L.Control.Search({
+        layer: geojsonLayer,
+        propertyName: 'SHORT_NAME',
+        zoom: '10',
+        });
+        map.addControl(searchControl);
+        });
+
+        var customIcon = L.icon({
+            iconUrl: 'icon.png',
+            iconSize: [30, 30],
+            iconAnchor: [10, 10],
+            popupAnchor: [15, 0]
+        });
+
+        fetch('results_featured_sites_180.csv')
             .then(response => response.text())
             .then(csvData => {
                 Papa.parse(csvData, {
@@ -62,17 +83,24 @@
                 console.error('Error fetching CSV:', error);
         });
 
-        function addMarkers(data) {
+        var blackIcon = new L.Icon({
+            iconUrl: 'blackmarker.png',
+            iconSize: [30, 30],
+            iconAnchor: [18, 30],
+            popupAnchor: [1, -34]
+        });
+
+    function addMarkers(data) {
         for (var i = 0; i < data.length; i++) {
             if (data[i].Latitude !== undefined && data[i].Longitude !== undefined) {
-                var marker = L.marker([data[i].Latitude, data[i].Longitude])
-                .bindPopup('<b>' + data[i].Name + '</b><br>' + data[i].Country + '<br>' + data[i].Description)
+                var marker = L.marker([data[i].Latitude, data[i].Longitude], {icon: blackIcon})
+                .bindPopup('<b>' + data[i].Name + '</b>' +'<br>' + '['+data[i].Latitude + ', ' + data[i].Longitude+']'+'<br>' + data[i].Country + '<br>' + data[i].Description)
                 .addTo(map);
         } else {
             console.error('Invalid LatLng object at index ' + i + ': Latitude or Longitude is undefined.');
         }
+        }
     }
-}
 
     </script>
 </body>
