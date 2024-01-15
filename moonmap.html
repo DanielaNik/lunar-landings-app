@@ -56,7 +56,7 @@
         onEachFeature: function (feature, layer) {
             layer.bindPopup(
         '<div class="popup-content">' +
-            '<p>' + feature.properties.SHORT_NAME + '</p>' +
+            '<h3>' + feature.properties.SHORT_NAME + '</h3>' +
             '<p>' + feature.properties.OBJECT + '</p>' +
             '<p>Mission: <b>' + feature.properties.MISSION + '</b></p>' +
             '<p>Coordinates: [' + feature.properties.LATITUDE + ', ' + feature.properties.LONGITUDE + ']</p>' +
