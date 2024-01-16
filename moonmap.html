@@ -109,7 +109,7 @@
             console.error('Error fetching CSV:', error);
         });
 
-    //Add icon for the objects on the map
+    //Add icon for the landing sites on the map
     var blackIcon = new L.Icon({
         iconUrl: 'blackmarker.png',
         iconSize: [30, 30],
@@ -126,7 +126,7 @@
                         '<div class="popup-content-markers">'
                         + '<h3  class ="data_name"><b>' + data[i].Name + '</b></h3>'
                         + '<p class="latlon"> <b>Coordinates:</b> ' + '[' + data[i].Latitude.toFixed(3) + ', ' + data[i].Longitude.toFixed(3) + ']</p>'
-                        + '<p class="country"> <b> Country: </b> ' + data[i].Country + '</p>'
+                        + '<p class="country"> <b> Result of: </b> ' + data[i].Country + '</p>'
                         + '<p class="description">' + data[i].Description + '</p>'
                         + '</div>'
                     )
