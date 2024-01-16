@@ -1,4 +1,5 @@
 /* required styles */
+/* CSS file for moonmap.html file*/
 
 .leaflet-pane,
 .leaflet-tile,
@@ -494,7 +495,6 @@ svg.leaflet-image-layer.leaflet-interactive path {
 .leaflet-popup-content p {
 	margin: 17px 0;
 	margin: 1.3em 0;
-	font-weight: bold;
 }
 .leaflet-popup-tip-container {
 	width: 40px;
@@ -659,4 +659,16 @@ svg.leaflet-image-layer.leaflet-interactive path {
 		-webkit-print-color-adjust: exact;
 		print-color-adjust: exact;
 	}
+}
+
+.popup-content-markers, .popup-content-objects {
+	font-size: 14px;
+}
+
+.data_name {
+	text-transform: uppercase;
+}
+
+.object {
+	text-decoration: underline;
 }
