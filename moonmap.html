@@ -59,7 +59,7 @@
             '<h3>' + feature.properties.SHORT_NAME + '</h3>' +
             '<p>' + feature.properties.OBJECT + '</p>' +
             '<p>Mission: <b>' + feature.properties.MISSION + '</b></p>' +
-            '<p>Coordinates: [' + feature.properties.LATITUDE + ', ' + feature.properties.LONGITUDE + ']</p>' +
+            '<p>Coordinates: [' + feature.properties.LATITUDE + ', ' + feature.properties.LONGITUDE + '] </p>' +
         '</div>',
     );
         }
@@ -114,7 +114,7 @@
             for (var i = 0; i < data.length; i++) {
             if (data[i].Latitude !== undefined && data[i].Longitude !== undefined) {
                 var marker = L.marker([data[i].Latitude, data[i].Longitude], {icon: blackIcon})
-                .bindPopup('<b>' + data[i].Name + '</b>' +'<br>' + '['+data[i].Latitude + ', ' + data[i].Longitude+']'+'<br>' + data[i].Country + '<br>' + data[i].Description)
+                .bindPopup('<b>' + data[i].Name + '</b>' +'<br>' + '['+data[i].Latitude + ', ' + data[i].Longitude+'] Elevation: ' + data[i].Elevation + '<br> Result of: ' + data[i].Country + '<br>' + data[i].Description)
                 .addTo(map);
             } else {
             console.error('Invalid LatLng object at index ' + i + ': Latitude or Longitude is undefined.');
